@@ -1,9 +1,11 @@
 {
   "name": "final-project",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bank application to be used as final project for Cyber Security class.",
   "main": "index.js",
   "scripts": {
+    "build": "npx tsc",
+    "start": "node ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,6 +16,15 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "sqlite": "^4.1.2"
+    "sqlite": "^4.1.2",
+    "sqlite3": "^5.1.6",
+    "body-parser": "1.20.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.10",
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.22",
+    "typescript": "^5.0.2"
   }
 }

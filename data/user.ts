@@ -2,6 +2,7 @@ import { connect } from './database';
 
 export const newUser = async (name: string, address:string, userName: string,  password: string, 
     balance: number, email: string, accountType: string) => {
+        console.log(name, address, userName, password, balance, email, accountType);
     const db = await connect();
     if (balance < 200) {
         throw new Error("Balance must be at least $200");

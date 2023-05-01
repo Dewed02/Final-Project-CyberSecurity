@@ -9,24 +9,25 @@ CREATE TABLE PersonalInfo (
     id INTEGER NOT NULL,
     name TEXT NOT NULL,
     address TEXT NOT NULL,
+    email TEXT NOT NULL
 );
 
 CREATE TABLE LoginInfo (
     id INTEGER NOT NULL,
     userName TEXT NOT NULL,
-    password TEXT NOT  NULL,
+    password TEXT NOT  NULL
 );
 
 CREATE TABLE Checkings (
     id INTEGER NOT NULL,
     accountNumber INTEGER NOT NULL,
-    balance INTEGER NOT NULL,
+    balance REAL NOT NULL
 );
 
 CREATE TABLE Savings (
     id INTEGER NOT NULL,
     accountNumber INTEGER NOT NULL,
-    balance INTEGER NOT NULL,
+    balance REAL NOT NULL
 );`
 
 // Borrowed from input validation assignment 
