@@ -1,11 +1,13 @@
 {
-    "compilerOptions": {
-      "target": "es6",
-      "module": "commonjs",
-      "rootDir": "./src",
-      "outDir": "./dist",
-      "strict": true
-    },
-    "include": ["src/**/*", "inputMethods/**/*"]
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "strict": true,
+    "target": "ES2017",
+    "module": "NodeNext",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   }
+}
   
