@@ -5,26 +5,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userInputNumber = exports.userInputString = void 0;
 const readline_1 = __importDefault(require("readline"));
-const userInputString = async () => {
+const userInputString = async (prompt) => {
     const rl = readline_1.default.createInterface({
         input: process.stdin,
         output: process.stdout
     });
     return new Promise((resolve, _) => {
-        rl.question('', (answer) => {
+        rl.question(prompt, (answer) => {
             resolve(answer);
             rl.close();
         });
     });
 };
 exports.userInputString = userInputString;
-const userInputNumber = async () => {
+const userInputNumber = async (prompt) => {
     const rl = readline_1.default.createInterface({
         input: process.stdin,
         output: process.stdout
     });
     return new Promise((resolve, _) => {
-        rl.question('', (answer) => {
+        rl.question(prompt, (answer) => {
             resolve(Number(answer));
             rl.close();
         });

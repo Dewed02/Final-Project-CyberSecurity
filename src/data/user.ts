@@ -1,54 +1,6 @@
 import { connect } from './database';
 import { userInputString, userInputNumber } from './input'; 
-
-// export const newUser = async (name: string, address:string, userName: string,  password: string, 
-//     balance: number, email: string, accountType: string) => {
-//         console.log(name, address, userName, password, balance, email, accountType);
-//     const db = await connect();
-//     if (balance < 200) {
-//         throw new Error("Balance must be at least $200");
-//     }
-//     let userExists = await db.get(`SELECT * FROM LoginInfo WHERE userName = :userName AND password = :password`, {
-//         ':userName': userName,
-//         ':password': password
-//     });
-//     if (userExists) {
-//         throw new Error("Username or password already exists");
-//     }
-//     const verifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     if (!verifyEmail.test(email)) {
-//         console.log('hello');
-//         throw new Error("Invalid email");
-//     }
-//     await db.run(`INSERT INTO PersonalInfo (name, address, email) VALUES (name, address, email)`, {
-//         ':name': name,
-//         ':address': address,
-//         ':email': email
-//     });
-//     return enterAccountInfo(userName, password, balance, accountType);
-// }
-
-// export const enterAccountInfo = async (userName: string, password: string, balance: number, accountType: string) => {
-//     console.log(userName, password, balance, accountType);
-//     const db = await connect();
-//     await db.run(`INSERT INTO LoginInfo (userName, password) VALUES (userName, password)`, {
-//         ':userName': userName,
-//         ':password': password
-//     });
-//     const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
-//     if (accountType === "savings") {
-//         await db.run(`INSERT INTO Savings (accountNumber, balance) VALUES (accountNumber, balance)`, {
-//             ':accountNumber': accountNumber,
-//             ':balance': balance
-//         });
-//     }
-//     else if (accountType === "checkings") {
-//     await db.run(`INSERT INTO Checkings (accountNumber, balance) VALUES (accountNumber, balance)`, {
-//         ':accountNumber': accountNumber,
-//         ':balance': balance
-//     });
-//     }
-// }
+import * as EmailValidator from 'email-validator';
 
 export const newUser = async (username: string) => {
     const db = await connect();
@@ -59,8 +11,7 @@ export const newUser = async (username: string) => {
         throw new Error("Username already exists");
     }
 
-    console.log("Please enter a password: ");
-    let password = await userInputString();
+    let password = await userInputString("Please enter a password:");
 
     let existingPassword = await db.get(`SELECT * FROM LoginInfo WHERE password = :password`, {
         ':password': password
@@ -69,49 +20,57 @@ export const newUser = async (username: string) => {
         throw new Error("Password already exists");
     }
     else {
-        await db.run(`INSERT INTO LoginInfo (userName, password) VALUES (:userName, :password)`, {
+        var id = Math.floor(Math.random() * 9000000000) + 1000000000;
+        let financialPassword = await userInputString("Please enter a financial password:");
+        await db.run(`INSERT INTO LoginInfo (id, userName, password, financialpassword) 
+        VALUES (:id, :userName, :password, :financialpassword)`, {
+            ':id': id,
             ':userName': username,
-            ':password': password
+            ':password': password,
+            ':financialpassword': financialPassword
         });
     }
-    console.log("Please enter your name: ");
-    let name = await userInputString();
-    console.log("Please enter your address: ");
-    let address = await userInputString();
-    console.log("Please enter your email: ");
-    let email = await userInputString();
-    const verifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!verifyEmail.test(email)) {
-        throw new Error("Invalid email");
-    }
-    return enterAccountInfo(name, address, email);
+
+    return enterAccountInfo(id);
 }
 
-export const enterAccountInfo = async (name: string, address: string, email: string) => {
+export const enterAccountInfo = async (id: number) => {
     const db = await connect();
-    await db.run(`INSERT INTO PersonalInfo (name, address, email) VALUES (:name, :address, :email)`, {
+    let name = await userInputString("Please enter your name: ");
+    let address = await userInputString("Please enter your address: ");
+    let email = await userInputString("Please enter your email: ");
+    console.log(!EmailValidator.validate(email));
+    if(!EmailValidator.validate(email)) {
+        throw new Error("Invalid email");
+    }
+    await db.run(`INSERT INTO PersonalInfo (id, name, address, email) VALUES (:id, :name, :address, :email)`, {
+        ':id': id,
         ':name': name,
         ':address': address,
         ':email': email
     });
 
-    console.log("Please enter your account type (savings or checkings): ");
-    let accountType = await userInputString();
-    console.log("Please enter your balance: ");
-    let balance = await userInputNumber();
+    
+    let accountType = await userInputString("Please enter your account type (savings or checkings): ");
+    let balance = await userInputNumber("Please enter your balance: ");
     const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
     if (accountType === "savings") {
-        await db.run(`INSERT INTO Savings (accountNumber, balance) VALUES (:accountNumber, :balance)`, {
+        await db.run(`INSERT INTO Savings (id, accountNumber, balance) VALUES (:id, :accountNumber, :balance)`, {
+            ':id': id,
             ':accountNumber': accountNumber,
             ':balance': balance
         });
     }
     else if (accountType === "checkings") {
-    await db.run(`INSERT INTO Checkings (accountNumber, balance) VALUES (:accountNumber, :balance)`, {
+    await db.run(`INSERT INTO Checkings (id, accountNumber, balance) VALUES (:id, :accountNumber, :balance)`, {
+        ':id': id,
         ':accountNumber': accountNumber,
         ':balance': balance
     });
     }   
+    else {
+        throw new Error("Invalid account type");
+    }
+    return accountNumber;
 }
-
 

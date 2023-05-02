@@ -15,7 +15,8 @@ CREATE TABLE PersonalInfo (
 CREATE TABLE LoginInfo (
     id INTEGER NOT NULL,
     username TEXT NOT NULL,
-    password TEXT NOT  NULL
+    password TEXT NOT  NULL,
+    financialPassword TEXT NOT NULL
 );
 
 CREATE TABLE Checkings (

@@ -18,13 +18,14 @@ CREATE TABLE PersonalInfo (
 
 CREATE TABLE LoginInfo (
     id INTEGER NOT NULL,
-    userName TEXT NOT NULL,
-    password TEXT NOT  NULL
+    username TEXT NOT NULL,
+    password TEXT NOT  NULL,
+    financialPassword TEXT NOT NULL
 );
 
 CREATE TABLE Checkings (
     id INTEGER NOT NULL,
-    accountNumber INTEGER NOT NULL,
+    accountnumber INTEGER NOT NULL,
     balance REAL NOT NULL
 );
 

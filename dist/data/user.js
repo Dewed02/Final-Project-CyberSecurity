@@ -1,55 +1,32 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.enterAccountInfo = exports.newUser = void 0;
 const database_1 = require("./database");
 const input_1 = require("./input");
-// export const newUser = async (name: string, address:string, userName: string,  password: string, 
-//     balance: number, email: string, accountType: string) => {
-//         console.log(name, address, userName, password, balance, email, accountType);
-//     const db = await connect();
-//     if (balance < 200) {
-//         throw new Error("Balance must be at least $200");
-//     }
-//     let userExists = await db.get(`SELECT * FROM LoginInfo WHERE userName = :userName AND password = :password`, {
-//         ':userName': userName,
-//         ':password': password
-//     });
-//     if (userExists) {
-//         throw new Error("Username or password already exists");
-//     }
-//     const verifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     if (!verifyEmail.test(email)) {
-//         console.log('hello');
-//         throw new Error("Invalid email");
-//     }
-//     await db.run(`INSERT INTO PersonalInfo (name, address, email) VALUES (name, address, email)`, {
-//         ':name': name,
-//         ':address': address,
-//         ':email': email
-//     });
-//     return enterAccountInfo(userName, password, balance, accountType);
-// }
-// export const enterAccountInfo = async (userName: string, password: string, balance: number, accountType: string) => {
-//     console.log(userName, password, balance, accountType);
-//     const db = await connect();
-//     await db.run(`INSERT INTO LoginInfo (userName, password) VALUES (userName, password)`, {
-//         ':userName': userName,
-//         ':password': password
-//     });
-//     const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
-//     if (accountType === "savings") {
-//         await db.run(`INSERT INTO Savings (accountNumber, balance) VALUES (accountNumber, balance)`, {
-//             ':accountNumber': accountNumber,
-//             ':balance': balance
-//         });
-//     }
-//     else if (accountType === "checkings") {
-//     await db.run(`INSERT INTO Checkings (accountNumber, balance) VALUES (accountNumber, balance)`, {
-//         ':accountNumber': accountNumber,
-//         ':balance': balance
-//     });
-//     }
-// }
+const EmailValidator = __importStar(require("email-validator"));
 const newUser = async (username) => {
     const db = await (0, database_1.connect)();
     let userExists = await db.get(`SELECT * FROM LoginInfo WHERE userName = :userName`, {
@@ -58,8 +35,7 @@ const newUser = async (username) => {
     if (userExists) {
         throw new Error("Username already exists");
     }
-    console.log("Please enter a password: ");
-    let password = await (0, input_1.userInputString)();
+    let password = await (0, input_1.userInputString)("Please enter a password:");
     let existingPassword = await db.get(`SELECT * FROM LoginInfo WHERE password = :password`, {
         ':password': password
     });
@@ -67,48 +43,55 @@ const newUser = async (username) => {
         throw new Error("Password already exists");
     }
     else {
-        await db.run(`INSERT INTO LoginInfo (userName, password) VALUES (:userName, :password)`, {
+        var id = Math.floor(Math.random() * 9000000000) + 1000000000;
+        let financialPassword = await (0, input_1.userInputString)("Please enter a financial password:");
+        await db.run(`INSERT INTO LoginInfo (id, userName, password, financialpassword) 
+        VALUES (:id, :userName, :password, :financialpassword)`, {
+            ':id': id,
             ':userName': username,
-            ':password': password
+            ':password': password,
+            ':financialpassword': financialPassword
         });
     }
-    console.log("Please enter your name: ");
-    let name = await (0, input_1.userInputString)();
-    console.log("Please enter your address: ");
-    let address = await (0, input_1.userInputString)();
-    console.log("Please enter your email: ");
-    let email = await (0, input_1.userInputString)();
-    const verifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!verifyEmail.test(email)) {
-        throw new Error("Invalid email");
-    }
-    return (0, exports.enterAccountInfo)(name, address, email);
+    return (0, exports.enterAccountInfo)(id);
 };
 exports.newUser = newUser;
-const enterAccountInfo = async (name, address, email) => {
+const enterAccountInfo = async (id) => {
     const db = await (0, database_1.connect)();
-    await db.run(`INSERT INTO PersonalInfo (name, address, email) VALUES (:name, :address, :email)`, {
+    let name = await (0, input_1.userInputString)("Please enter your name: ");
+    let address = await (0, input_1.userInputString)("Please enter your address: ");
+    let email = await (0, input_1.userInputString)("Please enter your email: ");
+    console.log(!EmailValidator.validate(email));
+    if (!EmailValidator.validate(email)) {
+        throw new Error("Invalid email");
+    }
+    await db.run(`INSERT INTO PersonalInfo (id, name, address, email) VALUES (:id, :name, :address, :email)`, {
+        ':id': id,
         ':name': name,
         ':address': address,
         ':email': email
     });
-    console.log("Please enter your account type (savings or checkings): ");
-    let accountType = await (0, input_1.userInputString)();
-    console.log("Please enter your balance: ");
-    let balance = await (0, input_1.userInputNumber)();
+    let accountType = await (0, input_1.userInputString)("Please enter your account type (savings or checkings): ");
+    let balance = await (0, input_1.userInputNumber)("Please enter your balance: ");
     const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
     if (accountType === "savings") {
-        await db.run(`INSERT INTO Savings (accountNumber, balance) VALUES (:accountNumber, :balance)`, {
+        await db.run(`INSERT INTO Savings (id, accountNumber, balance) VALUES (:id, :accountNumber, :balance)`, {
+            ':id': id,
             ':accountNumber': accountNumber,
             ':balance': balance
         });
     }
     else if (accountType === "checkings") {
-        await db.run(`INSERT INTO Checkings (accountNumber, balance) VALUES (:accountNumber, :balance)`, {
+        await db.run(`INSERT INTO Checkings (id, accountNumber, balance) VALUES (:id, :accountNumber, :balance)`, {
+            ':id': id,
             ':accountNumber': accountNumber,
             ':balance': balance
         });
     }
+    else {
+        throw new Error("Invalid account type");
+    }
+    return accountNumber;
 };
 exports.enterAccountInfo = enterAccountInfo;
 //# sourceMappingURL=user.js.map

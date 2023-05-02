@@ -28,14 +28,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-// import https from 'https';
 const inputMethods = __importStar(require("./inputMethods"));
 const app = (0, express_1.default)();
 const port = 8000;
 app.use(body_parser_1.default.json());
 app.post('/user/new', inputMethods.newUser);
-// const httpsOptions = { key: fs.readFileSync('path/to/private/key.pem'), cert: fs.readFileSync('path/to/certificate.pem') };
-// const server = https.createServer(httpsOptions, app);
+// app.post('/user/login', inputMethods.login);
+app.post('/savings/withdraw', inputMethods.withdrawSavings);
+app.post('/savings/deposit', inputMethods.depositSavings);
+app.get('/savings/balance', inputMethods.savingsBalance);
+app.post('/checkings/withdraw', inputMethods.withdrawChecking);
+// app.post('/checkings/deposit', inputMethods.depositChecking);
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
