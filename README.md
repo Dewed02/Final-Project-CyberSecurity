@@ -1,5 +1,5 @@
 # Final-Project-CyberSecurity
-Final Project for COSC 4010 CyberSecurity, a simple banking website without a GUI. The security design that was used to guide development of the project was a slightly modified version of DREAD assement that was outlined on page 229-230. However, instead of using it for bug maintance it was used to decided the level of security that would be used to protect different assests within the program. 
+Final Project for COSC 4010 CyberSecurity, a simple banking website without a GUI. The security design that was used to guide development of the project was a slightly modified version of DREAD assessment that was outlined on page 229-230. However, instead of using it for bug maintenance it was used to decide the level of security that would be used to protect different assets within the program.
 
 # Packages
 ***
