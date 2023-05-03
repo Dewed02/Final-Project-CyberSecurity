@@ -131,6 +131,7 @@ export const changePassword = async (username: string) => {
     }
 
     let securityQuestion = await userInputString("Please answer the security question: ");
+    securityQuestion = sha256(securityQuestion);
     let secQuestion = await db.get(`SELECT securityQuestion FROM LoginInfo WHERE username = :username`, {
         ':username': username
     });

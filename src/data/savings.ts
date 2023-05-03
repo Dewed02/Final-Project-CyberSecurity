@@ -31,7 +31,7 @@ export const createSavings = async (username: string) => {
         throw new Error("Initial balance must be at least $200");
     }
 
-    let accountNumber = Math.floor(Math.random() * 1000000000) + 1;
+    const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
 
     await db.run(`INSERT INTO Savings (id, accountNumber, balance) VALUES (:id, :accountNumber, :balance)`, {
         ':id': userID.id,

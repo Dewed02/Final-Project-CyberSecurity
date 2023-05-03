@@ -144,6 +144,7 @@ const changePassword = async (username) => {
         throw new Error("Unsuccessful authentication attempt");
     }
     let securityQuestion = await (0, input_1.userInputString)("Please answer the security question: ");
+    securityQuestion = (0, js_sha256_1.sha256)(securityQuestion);
     let secQuestion = await db.get(`SELECT securityQuestion FROM LoginInfo WHERE username = :username`, {
         ':username': username
     });
