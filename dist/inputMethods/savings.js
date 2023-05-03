@@ -25,10 +25,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.savingsBalance = exports.depositSavings = exports.withdrawSavings = exports.createSavings = void 0;
 const data = __importStar(require("../data"));
+const fs = __importStar(require("fs"));
 const createSavings = async (req, res) => {
     const { username } = req.body;
     try {
         await data.createSavings(username);
+        fs.appendFile('log.txt', 'Savings account created by user ' + username + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ message: "Savings account created" });
     }
     catch (err) {
@@ -40,6 +45,10 @@ const withdrawSavings = async (req, res) => {
     const { amount, username } = req.body;
     try {
         await data.withdrawSavings(amount, username);
+        fs.appendFile('log.txt', 'Savings account withdrawal by user ' + username + ' for $' + amount + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ message: "Withdrawal successful" });
     }
     catch (err) {
@@ -51,6 +60,10 @@ const depositSavings = async (req, res) => {
     const { amount, username } = req.body;
     try {
         await data.depositSavings(amount, username);
+        fs.appendFile('log.txt', 'Savings account deposit by user ' + username + ' for $' + amount + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ message: "Deposit successful" });
     }
     catch (err) {
@@ -62,6 +75,10 @@ const savingsBalance = async (req, res) => {
     const { username } = req.body;
     try {
         const balance = await data.savingsBalance(username);
+        fs.appendFile('log.txt', 'Savings account balance check by user ' + username + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ balance: balance });
     }
     catch (err) {

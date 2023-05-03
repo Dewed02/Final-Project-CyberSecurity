@@ -25,10 +25,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkingBalance = exports.depositChecking = exports.withdrawChecking = exports.createCheckings = void 0;
 const data = __importStar(require("../data"));
+const fs = __importStar(require("fs"));
 const createCheckings = async (req, res) => {
     const { username } = req.body;
     try {
         await data.createCheckings(username);
+        fs.appendFile('log.txt', 'Checkings account created by user ' + username + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ message: "Checkings account created" });
     }
     catch (err) {
@@ -40,6 +45,10 @@ const withdrawChecking = async (req, res) => {
     const { amount, username } = req.body;
     try {
         await data.withdrawChecking(amount, username);
+        fs.appendFile('log.txt', 'Checkings account withdrawal by user ' + username + ' for $' + amount + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ message: "Withdrawal successful" });
     }
     catch (err) {
@@ -51,6 +60,10 @@ const depositChecking = async (req, res) => {
     const { amount, username } = req.body;
     try {
         await data.depositChecking(amount, username);
+        fs.appendFile('log.txt', 'Checkings account deposit by user ' + username + ' for $' + amount + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ message: "Deposit successful" });
     }
     catch (err) {
@@ -62,6 +75,10 @@ const checkingBalance = async (req, res) => {
     const { username } = req.body;
     try {
         const balance = await data.checkingBalance(username);
+        fs.appendFile('log.txt', 'Checkings account balance check by user ' + username + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ balance: balance });
     }
     catch (err) {

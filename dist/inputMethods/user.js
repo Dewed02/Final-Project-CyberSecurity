@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.changePassword = exports.updateAddress = exports.viewPersonalInfo = exports.logout = exports.login = exports.newUser = void 0;
 const data = __importStar(require("../data"));
+const fs = __importStar(require("fs"));
 const newUser = async (req, res) => {
     const { username } = req.body;
     try {
@@ -73,6 +74,10 @@ const updateAddress = async (req, res) => {
     const { username, address } = req.body;
     try {
         await data.updateAddress(username, address);
+        fs.appendFile('log.txt', 'Address updated by user' + username + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ message: "Address updated" });
     }
     catch (err) {
@@ -84,6 +89,10 @@ const changePassword = async (req, res) => {
     const { username } = req.body;
     try {
         await data.changePassword(username);
+        fs.appendFile('log.txt', 'Password changed by user ' + username + '\n', (err) => {
+            if (err)
+                throw err;
+        });
         res.status(200).json({ message: "Password changed" });
     }
     catch (err) {

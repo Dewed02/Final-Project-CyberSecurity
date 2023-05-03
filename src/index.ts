@@ -5,6 +5,7 @@ import * as inputMethods from './inputMethods';
 
 const app: Express = express();
 const port = 8000;
+process.stdin.setMaxListeners(20);
 
 app.use(bodyParser.json());
 

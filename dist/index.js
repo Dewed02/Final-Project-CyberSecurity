@@ -31,6 +31,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const inputMethods = __importStar(require("./inputMethods"));
 const app = (0, express_1.default)();
 const port = 8000;
+process.stdin.setMaxListeners(20);
 app.use(body_parser_1.default.json());
 app.post('/user/new', inputMethods.newUser);
 app.put('/user/login', inputMethods.login);

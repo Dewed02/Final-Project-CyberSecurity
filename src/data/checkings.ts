@@ -12,15 +12,15 @@ export const createCheckings = async (username: string) => {
     if(!await financialAuthentication(username)) {
         throw new Error("Unsuccessful authentication attempt");
     }
-    console.log("made it past auth");
+    
     let userID = await db.get(`SELECT id FROM LoginInfo WHERE username = :username`, {
         ':username': username
     });
-    console.log(userID);
+    
     let existingAccount = await db.get(`SELECT id FROM Checkings WHERE id = :id`, {
         ':id': userID.id
     });
-    console.log(existingAccount);
+    
     if(existingAccount) {
         throw new Error("User already has a checking account");
     }

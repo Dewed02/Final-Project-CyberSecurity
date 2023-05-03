@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { connect } from '../data/database';
 import * as data from '../data';
+import * as fs from 'fs';
 
 
 export const newUser = async (req: Request, res: Response) => {
@@ -50,6 +51,9 @@ export const updateAddress = async (req: Request, res: Response) => {
     const { username, address } = req.body;
     try {
         await data.updateAddress(username, address);
+        fs.appendFile('log.txt', 'Address updated by user ' + username + '\n', (err) => {
+            if (err) throw err;
+        });
         res.status(200).json({message: "Address updated"});
     }
     catch (err) {
@@ -61,6 +65,9 @@ export const changePassword = async (req: Request, res: Response) => {
     const { username } = req.body;
     try {
         await data.changePassword(username);
+        fs.appendFile('log.txt', 'Password changed by user ' + username + '\n', (err) => {
+            if (err) throw err;
+        });
         res.status(200).json({message: "Password changed"});
     }
     catch (err) {
