@@ -1,6 +1,9 @@
 export {
     newUser,
     enterAccountInfo,
+    viewPersonalInfo,
+    updateAddress,
+    changePassword,
 } from './user';
 
 export {
@@ -10,14 +13,21 @@ export {
 
 export {
     standardAuthentication,
-    financialAuthentication,
+    financialAuthentication, 
+    login,
+    logout,
+    isLoggedIn
 } from './authentication';
 
 export {
+    createCheckings,
     withdrawChecking,
+    depositChecking,
+    checkingBalance,
 } from './checkings';
 
 export {
+    createSavings,
     withdrawSavings,
     depositSavings,
     savingsBalance,

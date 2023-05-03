@@ -23,11 +23,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.financialAuthentication = exports.standardAuthentication = void 0;
+exports.isLoggedIn = exports.logout = exports.login = exports.financialAuthentication = exports.standardAuthentication = void 0;
 const readline = __importStar(require("readline"));
 const database_1 = require("./database");
+const js_sha256_1 = require("js-sha256");
 const standardAuthentication = async (username) => {
-    const password = await readPassIn("Enter your password: ");
+    let password = await readPassIn("Enter your password: ");
+    password = (0, js_sha256_1.sha256)(password);
     const db = await (0, database_1.connect)();
     let pass = await db.get(`SELECT password FROM LoginInfo WHERE username = :username`, {
         ':username': username
@@ -41,22 +43,21 @@ const standardAuthentication = async (username) => {
 };
 exports.standardAuthentication = standardAuthentication;
 const financialAuthentication = async (username) => {
-    const password = await readPassIn("Enter your password: ");
+    let password = await readPassIn("Enter your password: ");
+    password = (0, js_sha256_1.sha256)(password);
     const db = await (0, database_1.connect)();
     let pass = await db.get(`SELECT password FROM LoginInfo WHERE username = :username`, {
         ':username': username
     });
-    console.log(pass.password);
     if (password !== pass.password) {
         throw new Error("Invalid password");
     }
     let financialPassword = await readPassIn("Enter your financial password: ");
+    financialPassword = (0, js_sha256_1.sha256)(financialPassword);
     let financialPass = await db.get(`SELECT financialPassword FROM LoginInfo WHERE username = :username`, {
         ':username': username
     });
-    console.log(financialPass.financialPassword);
     if (financialPassword !== financialPass.financialPassword) {
-        console.log('Invalid financial password');
         throw new Error("Invalid financial password");
     }
     else {
@@ -64,6 +65,70 @@ const financialAuthentication = async (username) => {
     }
 };
 exports.financialAuthentication = financialAuthentication;
+const login = async (username) => {
+    const db = await (0, database_1.connect)();
+    let userID = await db.get(`SELECT id FROM LoginInfo WHERE username = :username`, {
+        ':username': username
+    });
+    if (!userID) {
+        throw new Error("Username does not exist");
+    }
+    let password = await readPassIn("Please enter your password: ");
+    password = (0, js_sha256_1.sha256)(password);
+    let existingPassword = await db.get(`SELECT * FROM LoginInfo WHERE password = :password`, {
+        ':password': password
+    });
+    if (password !== existingPassword.password) {
+        throw new Error("Incorrect password");
+    }
+    let loggedIn = await db.get(`SELECT loggedIn from LoginInfo where username = :username`, {
+        ':username': username
+    });
+    if (loggedIn.loggedIn) {
+        throw new Error("User is already logged in");
+    }
+    else {
+        await db.run(`UPDATE LoginInfo SET loggedIn = 1 WHERE username = :username`, {
+            ':username': username
+        });
+    }
+    return userID.id;
+};
+exports.login = login;
+const logout = async (username) => {
+    const db = await (0, database_1.connect)();
+    let loggedIn = await db.get(`SELECT loggedIn from LoginInfo where username = :username`, {
+        ':username': username
+    });
+    if (!loggedIn.loggedIn) {
+        throw new Error("User is not logged in");
+    }
+    else {
+        await db.run(`UPDATE LoginInfo SET loggedIn = 0 WHERE username = :username`, {
+            ':username': username
+        });
+    }
+};
+exports.logout = logout;
+const isLoggedIn = async (username) => {
+    const db = await (0, database_1.connect)();
+    let userExists = await db.get(`SELECT * FROM LoginInfo WHERE username = :username`, {
+        ':username': username
+    });
+    if (!userExists) {
+        throw new Error("Username does not exist");
+    }
+    let loggedIn = await db.get(`SELECT loggedIn from LoginInfo where username = :username`, {
+        ':username': username
+    });
+    if (!loggedIn.loggedIn) {
+        throw new Error("User is not logged in");
+    }
+    else {
+        return true;
+    }
+};
+exports.isLoggedIn = isLoggedIn;
 // Borrowed from deaddrop project
 const readPassIn = (query) => {
     return new Promise((resolve, _) => {

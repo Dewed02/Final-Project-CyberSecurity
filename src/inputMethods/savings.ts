@@ -1,6 +1,17 @@
 import { Request, Response } from "express";
 import * as data from "../data";
 
+export const createSavings = async (req: Request, res: Response) => {
+    const { username } = req.body;
+    try {
+        await data.createSavings(username);
+        res.status(200).json({message: "Savings account created"});
+    }
+    catch (err) {
+        res.status(400).json({message: "Something went wrong :("});
+    }
+}
+
 export const withdrawSavings = async (req: Request, res: Response) => {
     const { amount, username } = req.body;
     try {

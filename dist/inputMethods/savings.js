@@ -23,8 +23,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.savingsBalance = exports.depositSavings = exports.withdrawSavings = void 0;
+exports.savingsBalance = exports.depositSavings = exports.withdrawSavings = exports.createSavings = void 0;
 const data = __importStar(require("../data"));
+const createSavings = async (req, res) => {
+    const { username } = req.body;
+    try {
+        await data.createSavings(username);
+        res.status(200).json({ message: "Savings account created" });
+    }
+    catch (err) {
+        res.status(400).json({ message: "Something went wrong :(" });
+    }
+};
+exports.createSavings = createSavings;
 const withdrawSavings = async (req, res) => {
     const { amount, username } = req.body;
     try {

@@ -23,8 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newUser = void 0;
-const data = __importStar(require("../data/user"));
+exports.changePassword = exports.updateAddress = exports.viewPersonalInfo = exports.logout = exports.login = exports.newUser = void 0;
+const data = __importStar(require("../data"));
 const newUser = async (req, res) => {
     const { username } = req.body;
     try {
@@ -36,4 +36,59 @@ const newUser = async (req, res) => {
     }
 };
 exports.newUser = newUser;
+const login = async (req, res) => {
+    const { username } = req.body;
+    try {
+        await data.login(username);
+        res.status(200).json({ message: "Login successful" });
+    }
+    catch (err) {
+        res.status(400).json({ message: "Something went wrong :(" });
+    }
+};
+exports.login = login;
+const logout = async (req, res) => {
+    const { username } = req.body;
+    try {
+        await data.logout(username);
+        res.status(200).json({ message: "Logout successful" });
+    }
+    catch (err) {
+        res.status(400).json({ message: "Something went wrong :(" });
+    }
+};
+exports.logout = logout;
+const viewPersonalInfo = async (req, res) => {
+    const { username } = req.body;
+    try {
+        const info = await data.viewPersonalInfo(username);
+        res.status(200).json(info);
+    }
+    catch (err) {
+        res.status(400).json({ message: "Something went wrong :(" });
+    }
+};
+exports.viewPersonalInfo = viewPersonalInfo;
+const updateAddress = async (req, res) => {
+    const { username, address } = req.body;
+    try {
+        await data.updateAddress(username, address);
+        res.status(200).json({ message: "Address updated" });
+    }
+    catch (err) {
+        res.status(400).json({ message: "Something went wrong :(" });
+    }
+};
+exports.updateAddress = updateAddress;
+const changePassword = async (req, res) => {
+    const { username } = req.body;
+    try {
+        await data.changePassword(username);
+        res.status(200).json({ message: "Password changed" });
+    }
+    catch (err) {
+        res.status(400).json({ message: "Something went wrong :(" });
+    }
+};
+exports.changePassword = changePassword;
 //# sourceMappingURL=user.js.map
