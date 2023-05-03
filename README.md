@@ -11,11 +11,13 @@ List of packages used in project:
   * sqlite3
 
 # Program Operation
+To start the program, use the command 'npm run build' followed by 'node dist/index.js' or 'npm run start'. First create a user using the /user/new endpoint (req body = username). After successful creation of a user, the user must be logged onto the website to use any of the utilities on the website. To log in use the /user/login 
 ***
-To start the program, use the command 'npm run build' followed by 'node dist/index.js' or 'npm run start'. First create a user using the /user/new endpoint (req body = username). After successful creation of a user, the user must be logged onto the website to use any of the utilities on the website. To log in use the /user/login endpoint (req body = username), once successfully logged in, on the user side of things:  
+endpoint (req body = username), once successfully logged in, on the user side of things:  
             * the user can view their personal information (i.e., name, address, email) using the /user/info endpoint (req body = username)
             * the can update their address using the /user/address endpoint (req body = username, address(new address to be used))
             *  or the user can change their login password using the /user/password endpoint (req body = username)
+***
 on the financial side of things depending on the type of bank account the user initial created (checking/savings) the user can:
             * withdraw funds using the /checkings/withdraw or /savings/withdraw endpoint (req body = amount (amount to withdraw), username)
             * deposit funds using the /checkings/deposit or /savings/deposit endpoint (req body = amount (amount to deposit), username)
