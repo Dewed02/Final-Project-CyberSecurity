@@ -3,22 +3,22 @@ Final Project for COSC 4010 CyberSecurity, a simple banking website without a GU
 
 # Packages
 List of packages used in project:
-  body-parser
-  email-validator
-  express
-  sha256
-  sqlite3
+  &emsp body-parser
+  &emsp email-validator
+  &emsp express
+  &emsp sha256
+  &emsp sqlite3
 
 # Program Operation
 To start the program, use the command 'npm run build' followed by 'node dist/index.js' or 'npm run start'. First create a user using the /user/new endpoint (req body = username). After successful creation of a user, the user must be logged onto the website to use any of the utilities on the website. To log in use the /user/login endpoint (req body = username), once successfully logged in, on the user side of things:  
-                  the user can view their personal information (i.e., name, address, email) using the /user/info endpoint (req body = username)
-                  the can update their address using the /user/address endpoint (req body = username, address(new address to be used))
-                  or the user can change their login password using the /user/password endpoint (req body = username)
+            &emsp the user can view their personal information (i.e., name, address, email) using the /user/info endpoint (req body = username)
+            &emsp the can update their address using the /user/address endpoint (req body = username, address(new address to be used))
+            &emsp  or the user can change their login password using the /user/password endpoint (req body = username)
 on the financial side of things depending on the type of bank account the user initial created (checking/savings) the user can:
-                  withdraw funds using the /checkings/withdraw or /savings/withdraw endpoint (req body = amount (amount to withdraw), username)
-                  deposit funds using the /checkings/deposit or /savings/deposit endpoint (req body = amount (amount to deposit), username)
-                  view available balance using the /checkings/balance or /savings/balance endpoint (req body = username)
-                  create a checking or savings account if they do not already have one using the /checkings/new or /savings/new endpoint (req body = username)
+            &emsp withdraw funds using the /checkings/withdraw or /savings/withdraw endpoint (req body = amount (amount to withdraw), username)
+            &emsp deposit funds using the /checkings/deposit or /savings/deposit endpoint (req body = amount (amount to deposit), username)
+            &emsp view available balance using the /checkings/balance or /savings/balance endpoint (req body = username)
+            &emsp create a checking or savings account if they do not already have one using the /checkings/new or /savings/new endpoint (req body = username)
 Finally, once the user has finished whatever tasks they needed to do on the website they can logout using the /user/logout endpoint (req body = username).
                 
 # Program Integrity
