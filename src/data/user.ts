@@ -14,6 +14,7 @@ export const newUser = async (username: string) => {
     }
 
     let password = await userInputString("Please enter a password:");
+    password = sha256(password);
 
     let existingPassword = await db.get(`SELECT * FROM LoginInfo WHERE password = :password`, {
         ':password': password
@@ -24,12 +25,11 @@ export const newUser = async (username: string) => {
     else {
         var id = Math.floor(Math.random() * 9000000000) + 1000000000;
         let financialPassword = await userInputString("Please enter a financial password:");
+        financialPassword = sha256(financialPassword);
         let securityQuestion = await userInputString("Please enter a security question " +
         "(i.e. mother's maiden name, first concert, etc. something that you will remember)): ");
-
-        password = sha256(password);
-        financialPassword = sha256(financialPassword);
         securityQuestion = sha256(securityQuestion);
+        
         await db.run(`INSERT INTO LoginInfo (id, userName, password, financialpassword, securityQuestion, loggedIn) 
         VALUES (:id, :userName, :password, :financialpassword, :securityQuestion, 0)`, {
             ':id': id,
